@@ -1,0 +1,32 @@
+GET http://localhost:3000/api HTTP/1.1
+
+###
+
+POST http://localhost:3000/api/auth/signup HTTP/1.1
+content-type: application/json
+
+{
+    "username": "test",
+    "email": "test@test.com",
+    "password": "pa$$word",
+    "role": "admin",
+    "firstName": "Test",
+    "lastName": "Test"
+}
+###
+
+GET http://localhost:3000/api/products HTTP/1.1
+
+###
+POST http://localhost:3000/api/products HTTP/1.1
+
+{
+    "SKU": "0000001123",
+    "code": 1234,
+    "name": "Great product",
+    "description": "This is a great product for the bag of the lady and the wallet of the gentleman",
+    "price": 100,
+    "currency": "ARS"
+}
+
+###
