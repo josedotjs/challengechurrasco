@@ -1,20 +1,21 @@
 const { sign, verify } = require('jsonwebtoken')
-
-const TOKEN_SECRET = 'abracadabra'
+const { jwtSecret } = require('../config')
+// const TOKEN_SECRET = 'abracadabra'
 
 const createAccessToken = (user) => {
+  console.log('secret', jwtSecret)
   // TODO: Validar datos
   return sign(
     {
       sub: user._id,
     },
-    TOKEN_SECRET, // TODO: Sacar desde config
+    jwtSecret, // TODO: Sacar desde config
     { algorithm: 'HS256', expiresIn: '24h' }
   )
 }
 
 const verifyToken = (token) => {
-  return verify(token, TOKEN_SECRET)
+  return verify(token, jwtSecret)
 }
 
 module.exports = {

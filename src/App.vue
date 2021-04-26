@@ -1,12 +1,17 @@
 <template>
   <v-app>
-    <v-app-bar app v-if="user">
+    <v-app-bar app v-if="user" class="mb-4">
       <v-container class="py-0 fill-height">
-        <v-toolbar-title class="mr-4">Churrasco challenge</v-toolbar-title>
+        <v-toolbar-title class="mr-4 d-none d-lg-flex d-xl-none"
+          >Churrasco challenge</v-toolbar-title
+        >
         <v-btn v-for="link in links" exact :key="link.to" :to="link.to" text>
           {{ link.label }}
         </v-btn>
         <v-spacer></v-spacer>
+        <v-chip class="ma-2 d-none d-lg-flex d-xl-none">
+          {{ user.firstName }} {{ user.lastName }}
+        </v-chip>
         <v-btn depressed color="error" @click="onUserLogout">
           Logout
         </v-btn>
@@ -21,12 +26,19 @@
 </template>
 
 <script>
+import { checkToken } from '@/services/auth'
 export default {
   name: 'App',
   components: {},
   created() {
-    console.log('created')
-    this.user = JSON.parse(localStorage.getItem('user'))
+    // const token = localStorage.getItem('token')
+
+    checkToken()
+      .then(() => {
+        this.user = JSON.parse(localStorage.getItem('user'))
+        this.$router.push('/products')
+      })
+      .catch(() => this.onUserLogout())
   },
   data() {
     return {
@@ -50,10 +62,13 @@ export default {
       localStorage.setItem('token', token)
     },
     onUserLogout() {
+      console.log('')
       localStorage.removeItem('user')
       localStorage.removeItem('token')
       this.user = null
-      this.$router.push('/')
+      if (this.$route.fullPath !== '/') {
+        this.$router.push('/')
+      }
     },
   },
 }

@@ -9,6 +9,7 @@ const routes = [
     path: '/',
     name: 'Login',
     component: Login,
+    props: true,
   },
   {
     path: '/products',

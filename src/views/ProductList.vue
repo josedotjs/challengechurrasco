@@ -20,7 +20,7 @@
               solo-inverted
               hide-details
               prepend-inner-icon="mdi-magnify"
-              label="Search"
+              label="Buscar"
             ></v-text-field>
             <template v-if="$vuetify.breakpoint.mdAndUp">
               <v-spacer></v-spacer>
@@ -53,25 +53,33 @@
               :key="product._id"
             >
               <v-card class="mx-auto" max-width="344">
-                <v-img
-                  src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-                  height="200px"
-                ></v-img>
-
-                <v-card-title>
-                  {{ product.name }}
-                </v-card-title>
-
+                <v-carousel v-if="product.pictures.length > 0">
+                  <v-carousel-item
+                    v-for="(item, i) in product.pictures"
+                    :key="i"
+                    :src="item || '../assets/logo_churrasco.png'"
+                  ></v-carousel-item>
+                </v-carousel>
+                <v-carousel v-else>
+                  <v-carousel-item
+                    src="../assets/logo_churrasco.png"
+                  ></v-carousel-item>
+                </v-carousel>
+                <v-card-title> {{ product.name }} </v-card-title>
+                <v-card-subtitle> SKU: {{ product.SKU }} </v-card-subtitle>
                 <v-card-subtitle>
-                  {{ product.price }}
+                  {{ product.description }}
+                </v-card-subtitle>
+                <v-card-subtitle>
+                  {{ product.currency }} {{ product.price | formatCurrency }}
                 </v-card-subtitle>
               </v-card>
             </v-col>
           </v-row>
         </template>
         <template v-slot:footer>
-          <v-row class="mt-2" align="center" justify="center">
-            <span class="grey--text">Items per page</span>
+          <v-row class="mt-6 mb-6" align="center" justify="center">
+            <span class="grey--text">Items por página</span>
             <v-menu offset-y>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -103,7 +111,7 @@
               class="mr-4
             grey--text"
             >
-              Page {{ page }} of {{ numberOfPages }}
+              Página {{ page }} de {{ numberOfPages }}
             </span>
             <v-btn
               fab
@@ -125,37 +133,6 @@
             </v-btn>
           </v-row>
         </template>
-        <!--
-        <template v-slot:footer>
-          <v-toolbar class="mt-2" color="indigo" dark flat>
-            <span class="grey--text">Items per page</span>
-            <v-menu offset-y>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  dark
-                  text
-                  color="primary"
-                  class="ml-2"
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  {{ itemsPerPage }}
-                  <v-icon>mdi-chevron-down</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item
-                  v-for="(number, index) in itemsPerPageArray"
-                  :key="index"
-                  @click="itemsPerPage = number"
-                >
-                  <v-list-item-title>{{ number }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </v-toolbar>
-        </template>
-        -->
       </v-data-iterator>
     </v-container>
   </v-main>
@@ -166,7 +143,20 @@ import { getAll } from '@/services/products'
 
 export default {
   async created() {
-    this.products = await getAll()
+    try {
+      this.products = await getAll()
+    } catch (e) {
+      // console.error(e)
+      this.$router.push({
+        name: 'Login',
+        query: { invalidCredentials: true },
+      })
+    }
+  },
+  filters: {
+    formatCurrency(val) {
+      return parseFloat(val).toFixed(2)
+    },
   },
   data() {
     return {

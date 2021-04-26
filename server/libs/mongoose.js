@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
+const config = require('../config')
+
 let db
 //Todo: Agregar cadena de conexión desde un config
-const HOST =
-  'mongodb://challenge:challenge@churrasco.uk.to:27017/challenge?authSource=admin'
+const HOST = config.mongoUri
 db = mongoose
   .connect(HOST, {
     useNewUrlParser: true,
