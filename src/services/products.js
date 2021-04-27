@@ -4,7 +4,6 @@ const config = {
   headers: {
     Authorization: `Bearer ${localStorage.getItem('token')}`,
     Accept: 'application/json',
-    'Content-Type': 'application/x-www-form-urlencoded',
   },
 }
 
@@ -17,5 +16,5 @@ export const create = (data) => {
 }
 
 export const uploadPhotos = (data) => {
-  return api.post('/products/uploadphotos', data)
+  return api.post('/products/uploadphotos', data, config)
 }

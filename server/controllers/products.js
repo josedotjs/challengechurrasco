@@ -31,7 +31,7 @@ exports.getAll = async (req, res, next) => {
 
 exports.create = async (req, res, next) => {
   try {
-    const data = req.body
+    const data = req.body.product
     // Validaciones
     let errors = []
 
@@ -59,7 +59,7 @@ exports.create = async (req, res, next) => {
     }
     // fin validaciones
 
-    const product = new ProductModel(req.body)
+    const product = new ProductModel(data)
     await product.save()
     res.sendStatus(200)
   } catch (e) {

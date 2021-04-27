@@ -45,7 +45,7 @@
               ref="fileUpload"
               v-model="files"
             ></v-file-input>
-            <v-row>
+            <v-row v-if="files.length">
               <v-col cols="8">
                 <v-chip
                   v-if="files.length > 0"
@@ -195,12 +195,13 @@ export default {
     submitForm() {
       if (this.valid) {
         this.serverErrors = []
-        create(this.formData)
+        create({
+          product: this.formData,
+        })
           .then(() => {
             this.$router.push('/products')
           })
           .catch((e) => {
-            console.error(e.response.data.errors)
             this.serverErrors = e.response.data.errors
           })
       }
